@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;stm32f4-disco/Core/Inc/queue&apos; to &apos;queue.h&apos;" description="Rename resource &apos;queue&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Inc/queue" name="queue.h" stamp="1625322368515" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;stm32f4-disco/Core/Src/queue&apos; to &apos;queue.c&apos;" description="Rename resource &apos;queue&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Src/queue" name="queue.c" stamp="1625322410427" updateReferences="true"/>
+</session>

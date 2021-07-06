@@ -1,0 +1,33 @@
+/*
+ * queue
+ *
+ *  Created on: Jul 3, 2021
+ *      Author: janpo
+ */
+
+#include "queue.h"
+
+
+
+uint8_t isQ_Full(void)
+{
+
+}
+
+uint8_t isQ_Empty(void)
+{
+
+}
+
+void enQueue(uint_8 element)
+{
+
+}
+
+uint8_t deQueue(void)
+{
+	uint8_t element;
+
+
+	return element;
+}

@@ -1,0 +1,65 @@
+/*
+ * queue
+ *
+ *  Created on: Jul 3, 2021
+ *      Author: janpo
+ */
+
+#include "queue.h"
+
+
+uint8_t isQ_Full(Queue *Q)
+{
+	if ((Q->Front==Q->Rear+1)||(Q->Front==0&&Q->Rear==SIZE-1))
+	{
+		return 1;
+	}
+	return 0;
+}
+
+uint8_t isQ_Empty(Queue *Q)
+{
+	if (Q->Front==-1) return 1;
+	return 0;
+
+}
+
+void enQueue(Queue *Q, uint8_t element)
+{
+	int16_t *ptr=&Q->Rear;
+
+
+	if (!isQ_Full(&Q))
+	{
+		if (Q->Front==-1){Q->Front=0;}
+		*ptr=(*ptr+1)%SIZE;
+		Q->Buffer[*ptr]=element;
+
+	}
+}
+
+uint8_t deQueue(void)
+{
+	uint8_t element;
+	int16_t *ptr=&Ser_Queue.Front;
+
+	if(!isQ_Empty())
+	{
+		element = Ser_Queue.Buffer[*ptr];
+
+
+
+		if (*ptr==Ser_Queue.Rear)
+		{
+			*ptr=-1;
+			Ser_Queue.Rear=-1;
+
+		}
+		else
+		{
+			*ptr=(*ptr+1)%SIZE;
+		}
+		return element;
+	}
+	else{return -1;}
+}

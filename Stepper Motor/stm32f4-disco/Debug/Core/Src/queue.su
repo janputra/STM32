@@ -1,0 +1,5 @@
+queue.c:11:9:isQ_Full	16	static
+queue.c:20:9:isQ_Empty	16	static
+queue.c:27:6:reset_Queue	16	static
+queue.c:34:6:enQueue	16	static
+queue.c:48:9:deQueue	24	static

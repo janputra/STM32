@@ -1,0 +1,26 @@
+/*
+ * queue
+ *
+ *  Created on: Jul 3, 2021
+ *      Author: janpo
+ */
+
+#ifndef INC_QUEUE_H_
+#define INC_QUEUE_H_
+
+#define SIZE 256
+typedef struct Queue{
+
+	int16_t Fptr;
+	int16_t Rptr;
+	uint8_t Buffer[SIZE];
+} Queue;
+
+Queue Ser_Queue;
+
+void enQueue(uint_8 element);
+uint8_t deQueue();
+
+
+
+#endif /* INC_QUEUE_H_ */

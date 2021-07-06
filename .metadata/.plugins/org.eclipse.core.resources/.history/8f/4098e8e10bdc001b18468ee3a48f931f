@@ -1,0 +1,19 @@
+/*
+ * queue
+ *
+ *  Created on: Jul 3, 2021
+ *      Author: janpo
+ */
+
+void enQueue(uint_8 element)
+{
+
+}
+
+uint8_t deQueue()
+{
+	uint8_t element;
+
+
+	return element;
+}

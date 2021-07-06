@@ -1,0 +1,39 @@
+/*
+ * queue
+ *
+ *  Created on: Jul 3, 2021
+ *      Author: janpo
+ */
+
+#include "queue.h"
+
+
+uint8_t isQ_Full(void)
+{
+	if ((Ser_Queue.Fptr==Ser_Queue.Rptr+1)||(Ser_Queue.Fptr==0&&Ser_Queue.Rptr==SIZE-1))
+	{
+		return 1;
+	}
+	return 0;
+}
+
+uint8_t isQ_Empty(void)
+{
+	if (Ser_Queue.Fptr==-1) return 1;
+	return 0;
+
+}
+
+void enQueue(uint8_t element)
+{
+	Ser_Queue.Buffer[Ser_Queue.Rptr]=element
+
+}
+
+uint8_t deQueue(void)
+{
+	uint8_t element;
+
+
+	return element;
+}
