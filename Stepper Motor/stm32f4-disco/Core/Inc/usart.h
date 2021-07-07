@@ -26,6 +26,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "queue.h"
 
 /* USER CODE BEGIN Includes */
 

@@ -4,5 +4,19 @@
  *  Created on: Jul 5, 2021
  *      Author: janpo
  */
+#include "stepper.h"
+
+void MTR_ISR(void)
+{
 
 
+	     if (TIM_MTR.Instance->SR==TIM_SR_UIF)
+		  {
+	    	 TIM_MTR.Instance->SR&=~TIM_SR_UIF;
+	    	 itoa(c,ibuf,10);
+	    	 ibuf[3]= '\n';
+	    	 HAL_UART_Transmit_IT(&huart5, ibuf, 4);
+	    	 c++;
+		  }
+
+}

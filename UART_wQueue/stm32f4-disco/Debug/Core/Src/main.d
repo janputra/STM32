@@ -40,8 +40,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h ../Core/Inc/crc.h \
  ../Core/Inc/main.h ../Core/Inc/dma2d.h ../Core/Inc/i2c.h \
  ../Core/Inc/ltdc.h ../Core/Inc/spi.h ../Core/Inc/tim.h \
- ../Core/Inc/usart.h ../Core/Inc/usb_otg.h ../Core/Inc/gpio.h \
- ../Core/Inc/fmc.h ../Core/Inc/queue.h
+ ../Core/Inc/usart.h ../Core/Inc/queue.h ../Core/Inc/usb_otg.h \
+ ../Core/Inc/gpio.h ../Core/Inc/usart.h ../Core/Inc/fmc.h
 
 ../Core/Inc/main.h:
 
@@ -139,10 +139,12 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 
 ../Core/Inc/usart.h:
 
+../Core/Inc/queue.h:
+
 ../Core/Inc/usb_otg.h:
 
 ../Core/Inc/gpio.h:
 
-../Core/Inc/fmc.h:
+../Core/Inc/usart.h:
 
-../Core/Inc/queue.h:
+../Core/Inc/fmc.h:

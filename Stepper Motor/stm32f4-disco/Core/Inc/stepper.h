@@ -8,6 +8,14 @@
 #ifndef INC_STEPPER_H_
 #define INC_STEPPER_H_
 
+#include "main.h"
+#include "tim.h"
+#include "usart.h"
 
+#define TIM_MTR htim7
+
+uint8_t ibuf[10]={0};
+uint16_t c=0;
+void MTR_ISR(void);
 
 #endif /* INC_STEPPER_H_ */

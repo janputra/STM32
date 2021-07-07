@@ -19,7 +19,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "usart.h"
-#include "queue.h"
+
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */

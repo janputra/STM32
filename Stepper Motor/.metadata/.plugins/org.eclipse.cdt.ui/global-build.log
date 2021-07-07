@@ -1,0 +1,7 @@
+16:33:56 **** Incremental Build of configuration Debug for project stm32f4-disco ****
+make -j8 all 
+arm-none-eabi-size   stm32f4-disco.elf 
+   text	   data	    bss	    dec	    hex	filename
+  29712	     20	   3452	  33184	   81a0	stm32f4-disco.elf
+Finished building: default.size.stdout
+ 
