@@ -21,7 +21,7 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "queue.h"
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart5;

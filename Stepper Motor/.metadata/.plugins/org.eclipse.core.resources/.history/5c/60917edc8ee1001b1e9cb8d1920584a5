@@ -1,0 +1,144 @@
+/*
+ * stepper.c
+ *
+ *  Created on: Jul 5, 2021
+ *      Author: janpo
+ */
+#include "stepper.h"
+
+#define MTR_PORT GPIOE
+
+static uint8_t MTR_OUT_TAB[8] = { 0b1000,
+							      0b1100,
+								  0b0100,
+								  0b0110,
+								  0b0010,
+								  0b0011,
+								  0b0001,
+								  0b1001};
+
+
+
+
+void step_Counter(speedRampData *data)
+{
+
+	if (data->dir==CW)
+	{
+		data->step_pos++;
+		data->step_count++;
+	}
+	else if (data->dir==CCW)
+	{
+		data->step_pos--;
+		data->step_count--;
+	}
+
+	if (data->step_pos==8){
+		data->step_pos=0;
+	}
+
+	mtr_Output(data->step_pos);
+}
+
+void mtr_Output(uint8_t pos)
+{
+	uint16_t mask = SM_IN1_Pin|SM_IN2_Pin|SM_IN3_Pin|SM_IN4_Pin;
+	uint32_t temp = (MTR_OUT_TAB[pos]<<2) & mask;
+	temp |= (((~MTR_OUT_TAB[pos])<<2) & mask)<<16;
+	MTR_PORT->BSRR=temp;
+
+
+}
+
+
+void runStepper(speedRampData *data)
+{
+
+	HAL_TIM_Base_Start_IT(&TIM_MTR);
+}
+
+void updateStepper(speedRampData *data)
+{
+
+}
+
+
+uint16_t f_updateDelay(uint16_t old_delay)
+{
+
+}
+
+//void MTR_ISR(void)
+//{
+//
+//
+//	     if (TIM_MTR.Instance->SR==TIM_SR_UIF)
+//		  {
+//	    	 TIM_MTR.Instance->SR&=~TIM_SR_UIF;
+//
+//
+//	    	 itoa(c,ibuf,10);
+//	    	 ibuf[3]= '\n';
+//	    	 HAL_UART_Transmit_IT(&huart5, ibuf, 4);
+//	    	 c++;
+//		  }
+//
+//}
+
+/*! \brief Square root routine.
+ *
+ * sqrt routine 'grupe', from comp.sys.ibm.pc.programmer
+ * Subject: Summary: SQRT(int) algorithm (with profiling)
+ *    From: warwick@cs.uq.oz.au (Warwick Allison)
+ *    Date: Tue Oct 8 09:16:35 1991
+ *
+ *  \param x  Value to find square root of.
+ *  \return  Square root of x.
+ */
+static uint32_t sqrt(uint32_t x)
+{
+  register uint32_t xr;  // result register
+  register uint32_t q2;  // scan-bit register
+  register uint8_t  f;   // flag (one bit)
+
+  xr = 0;                     // clear result
+  q2 = 0x40000000L;           // higest possible result bit
+  do
+  {
+    if((xr + q2) <= x)
+    {
+      x -= xr + q2;
+      f = 1;                  // set flag
+    }
+    else{
+      f = 0;                  // clear flag
+    }
+    xr >>= 1;
+    if(f){
+      xr += q2;               // test flag
+    }
+  } while(q2 >>= 2);          // shift twice
+  if(xr < x){
+    return xr +1;             // add for rounding
+  }
+  else{
+    return xr;
+  }
+}
+
+/*! \brief Find minimum value.
+ *
+ *  Returns the smallest value.
+ *
+ *  \return  Min(x,y).
+ */
+uint16_t min(uint16_t x, uint16_t y)
+{
+  if(x < y){
+    return x;
+  }
+  else{
+    return y;
+  }
+}

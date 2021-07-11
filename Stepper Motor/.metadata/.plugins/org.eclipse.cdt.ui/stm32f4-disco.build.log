@@ -1,10 +1,46 @@
-16:33:56 **** Incremental Build of configuration Debug for project stm32f4-disco ****
+15:09:06 **** Incremental Build of configuration Debug for project stm32f4-disco ****
 make -j8 all 
-arm-none-eabi-size   stm32f4-disco.elf 
-   text	   data	    bss	    dec	    hex	filename
-  29712	     20	   3452	  33184	   81a0	stm32f4-disco.elf
-Finished building: default.size.stdout
- 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F429xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/stepper.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F429xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/stepper.d" -MT"Core/Src/stepper.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/stepper.o"
+In file included from ../Core/Src/stepper.c:7:
+../Core/Inc/stepper.h:87:17: warning: conflicting types for built-in function 'sqrt'; expected 'double(double)' [-Wbuiltin-declaration-mismatch]
+   87 | static uint32_t sqrt(uint32_t x);
+      |                 ^~~~
+../Core/Inc/stepper.h:14:1: note: 'sqrt' is declared in header '<math.h>'
+   13 | #include "usart.h"
+  +++ |+#include <math.h>
+   14 | 
+In file included from ../Core/Src/main.c:36:
+../Core/Inc/stepper.h:87:17: warning: conflicting types for built-in function 'sqrt'; expected 'double(double)' [-Wbuiltin-declaration-mismatch]
+   87 | static uint32_t sqrt(uint32_t x);
+      |                 ^~~~
+../Core/Inc/stepper.h:14:1: note: 'sqrt' is declared in header '<math.h>'
+   13 | #include "usart.h"
+  +++ |+#include <math.h>
+   14 | 
+../Core/Src/stepper.c: In function 'updateStepper':
+../Core/Src/stepper.c:170:8: error: 'step_count' undeclared (first use in this function); did you mean 'step_Counter'?
+  170 |        step_count++;
+      |        ^~~~~~~~~~
+      |        step_Counter
+../Core/Src/stepper.c:170:8: note: each undeclared identifier is reported only once for each function it appears in
+../Core/Src/stepper.c:171:8: error: 'srd' undeclared (first use in this function)
+  171 |        srd.accel_count++;
+      |        ^~~
+../Core/Src/main.c: In function 'HAL_TIM_PeriodElapsedCallback':
+../Core/Src/main.c:252:19: error: 'motor_data' undeclared (first use in this function)
+  252 |    updateStepper(&motor_data);
+      |                   ^~~~~~~~~~
+../Core/Src/main.c:252:19: note: each undeclared identifier is reported only once for each function it appears in
+In file included from ../Core/Src/main.c:36:
+../Core/Src/main.c: At top level:
+../Core/Inc/stepper.h:87:17: warning: 'sqrt' declared 'static' but never defined [-Wunused-function]
+   87 | static uint32_t sqrt(uint32_t x);
+      |                 ^~~~
+make: *** [Core/Src/subdir.mk:85: Core/Src/main.o] Error 1
+make: *** Waiting for unfinished jobs....
+make: *** [Core/Src/subdir.mk:91: Core/Src/stepper.o] Error 1
+"make -j8 all" terminated with exit code 2. Build might be incomplete.
 
-16:33:56 Build Finished. 0 errors, 0 warnings. (took 676ms)
+15:09:07 Build Failed. 6 errors, 3 warnings. (took 959ms)
 

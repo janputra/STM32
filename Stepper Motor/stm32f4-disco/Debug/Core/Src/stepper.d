@@ -38,7 +38,7 @@ Core/Src/stepper.o: ../Core/Src/stepper.c ../Core/Inc/stepper.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h ../Core/Inc/tim.h \
- ../Core/Inc/usart.h ../Core/Inc/queue.h
+ ../Core/Inc/usart.h
 
 ../Core/Inc/stepper.h:
 
@@ -125,5 +125,3 @@ Core/Src/stepper.o: ../Core/Src/stepper.c ../Core/Inc/stepper.h \
 ../Core/Inc/tim.h:
 
 ../Core/Inc/usart.h:
-
-../Core/Inc/queue.h:

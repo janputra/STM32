@@ -32,7 +32,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "queue.h"
+#include "stepper.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -125,7 +126,11 @@ int main(void)
 
   HAL_UART_Receive_IT(&huart5, rec_buff, 1);
  // uint16_t c=0;
-  HAL_TIM_Base_Start_IT(&htim7);
+  SM_Param motor_param={0};
+  speedRampData motor_data={0};
+
+
+
   while (1)
   {
 
@@ -146,7 +151,7 @@ int main(void)
 		  HAL_UART_Transmit_IT(&huart5,Ser_Queue.Buffer, Ser_Queue.Rear+1);
 		  reset_Queue(&Ser_Queue);
 	  }
-
+	  runStepper(&motor_data, &motor_param);
 //	  c= htim7.Instance->CNT;
 //	  itoa(c,ibuf,10);
 //	  ibuf[3]= '\n';
@@ -242,7 +247,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
-
+  else if (htim->Instance == TIM7)
+  {
+	  updateStepper(&motor_data);
+  }
 
   /* USER CODE END Callback 1 */
 }
