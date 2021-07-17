@@ -262,6 +262,7 @@ TX_data Tx_data;
 uint8_t rec_buff[1];
 uint8_t tr_buff[1];
 
+uint8_t runMotor_f;
 
 /* USER CODE END Private defines */
 

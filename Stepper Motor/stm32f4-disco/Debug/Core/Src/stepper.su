@@ -1,0 +1,5 @@
+stepper.c:23:6:step_Counter	16	static
+stepper.c:44:6:mtr_Output	24	static
+stepper.c:55:6:runStepper	32	static
+stepper.c:149:6:updateStepper	16	static
+stepper.c:221:6:f_updateDelay	24	static

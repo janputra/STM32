@@ -143,10 +143,13 @@ void MX_GPIO_Init(void)
 /* USER CODE BEGIN 2 */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	HAL_UART_Transmit_IT(&huart5, Tx_data.buff, Tx_data.len);
+	//HAL_UART_Transmit_IT(&huart5, Tx_data.buff, Tx_data.len);
+
+	//TX_send_Int(10);
 
 	HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
 
+	runMotor_f=1;
 
 }
 /* USER CODE END 2 */

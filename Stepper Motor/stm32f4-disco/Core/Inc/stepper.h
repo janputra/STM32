@@ -50,9 +50,10 @@ typedef struct speedRampData{
   uint8_t state;
 
   uint16_t last_accel_delay;
+  uint16_t last_step_delay;
   // Counting steps when moving.
   // Keep track of remainder from new_step-delay calculation to incrase accurancy
-  uint16_t rest = 0;
+  uint16_t rest;
 
 } speedRampData;
 
@@ -83,13 +84,13 @@ typedef struct speedRampData{
 #define A_x20000 		((uint32_t)(ALPHA*20000))              	// ALPHA*200
 
 
-uint8_t ibuf[10]={0};
-uint16_t c=0;
+//uint8_t ibuf[10]={0};
+//uint16_t c=0;
 //void MTR_ISR(void);
 void mtr_Output(uint8_t pos);
-void f_updateDelay(speedRampData *data)
+void f_updateDelay(speedRampData *data);
 
-static uint32_t sqrt(uint32_t x);
+//static uint32_t sqrt(uint32_t x);
 uint16_t min(uint16_t x, uint16_t y);
 void updateStepper(speedRampData *data);
 void runStepper(speedRampData *data, SM_Param *param);

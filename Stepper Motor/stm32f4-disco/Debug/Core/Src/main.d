@@ -41,8 +41,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/Inc/main.h ../Core/Inc/dma2d.h ../Core/Inc/i2c.h \
  ../Core/Inc/ltdc.h ../Core/Inc/spi.h ../Core/Inc/tim.h \
  ../Core/Inc/usart.h ../Core/Inc/usb_otg.h ../Core/Inc/gpio.h \
- ../Core/Inc/fmc.h ../Core/Inc/queue.h ../Core/Inc/stepper.h \
- ../Core/Inc/tim.h ../Core/Inc/usart.h
+ ../Core/Inc/fmc.h ../Core/Inc/retarget.h ../Core/Inc/queue.h \
+ ../Core/Inc/stepper.h ../Core/Inc/tim.h ../Core/Inc/usart.h
 
 ../Core/Inc/main.h:
 
@@ -145,6 +145,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/gpio.h:
 
 ../Core/Inc/fmc.h:
+
+../Core/Inc/retarget.h:
 
 ../Core/Inc/queue.h:
 

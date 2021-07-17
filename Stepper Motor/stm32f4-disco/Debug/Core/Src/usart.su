@@ -4,3 +4,4 @@ usart.c:88:6:HAL_UART_MspInit	56	static
 usart.c:153:6:HAL_UART_MspDeInit	16	static
 usart.c:199:6:HAL_UART_TxCpltCallback	16	static
 usart.c:204:6:HAL_UART_RxCpltCallback	16	static
+usart.c:212:6:TX_send_Int	32	static

@@ -29,11 +29,12 @@
 #include "usb_otg.h"
 #include "gpio.h"
 #include "fmc.h"
-
+#include "retarget.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "queue.h"
 #include "stepper.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -53,7 +54,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+SM_Param motor_param={0};
+speedRampData motor_data={0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -107,6 +109,7 @@ int main(void)
   MX_UART5_Init();
   MX_USB_OTG_HS_HCD_Init();
   MX_TIM7_Init();
+  RetargetInit(&huart5);
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -126,11 +129,13 @@ int main(void)
 
   HAL_UART_Receive_IT(&huart5, rec_buff, 1);
  // uint16_t c=0;
-  SM_Param motor_param={0};
-  speedRampData motor_data={0};
+  motor_param.accel=100;
+  motor_param.decel=100;
+  motor_param.speed=10;
+  motor_param.steps=4096/4;
 
-
-
+//  htim7.Instance->ARR= 2500;
+//  HAL_TIM_Base_Start(&htim7);
   while (1)
   {
 
@@ -151,8 +156,13 @@ int main(void)
 		  HAL_UART_Transmit_IT(&huart5,Ser_Queue.Buffer, Ser_Queue.Rear+1);
 		  reset_Queue(&Ser_Queue);
 	  }
-	  runStepper(&motor_data, &motor_param);
-//	  c= htim7.Instance->CNT;
+	  if (runMotor_f)
+	  {
+		  runStepper(&motor_data, &motor_param);
+
+		 // printf("s_delay : %d s_count : %d \n", motor_data.step_delay, motor_data.step_count);
+	  }
+	  //	  c= htim7.Instance->CNT;
 //	  itoa(c,ibuf,10);
 //	  ibuf[3]= '\n';
 //	  HAL_UART_Transmit_IT(&huart5, ibuf, 4);
@@ -247,9 +257,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
-  else if (htim->Instance == TIM7)
+  if (htim->Instance == TIM7)
   {
+
 	  updateStepper(&motor_data);
+
   }
 
   /* USER CODE END Callback 1 */

@@ -5,7 +5,7 @@
  *      Author: janpo
  */
 #include "stepper.h"
-
+#include <math.h>
 
 
 static uint8_t MTR_OUT_TAB[8] = { 0b1000,
@@ -140,70 +140,80 @@ void runStepper(speedRampData *data, SM_Param *param)
 
 	  }
 
-	HAL_TIM_Base_Start_IT(&TIM_MTR);
+	  TIM_MTR.Instance->ARR= data->step_delay-1;
+	  HAL_TIM_Base_Start_IT(&TIM_MTR);
+
+
 }
 
 void updateStepper(speedRampData *data)
 {
 
 	// Holds next delay period.
-	  uint16_t new_step_delay;
-	  // Remember the last step delay used when accelrating.
+	// Remember the last step delay used when accelrating.
 
 
+		printf("ok!\n");
 	  //OCR1A = srd.step_delay;
+
+
+			TIM_MTR.Instance->ARR= data->step_delay-1;
+			data->last_step_delay=data->step_delay;
+
+
+
 
 	  switch(data->run_state) {
 	    case STOP:
-	      //step_count = 0;
-	      rest = 0;
-	      // Stop Timer/Counter 1.
-	      //TCCR1B &= ~((1<<CS12)|(1<<CS11)|(1<<CS10));
-	      //status.running = FALSE;
+	      data->step_count=0;
+	      data->rest = 0;
+	      runMotor_f=0;
+
+	      HAL_TIM_Base_Stop_IT(&TIM_MTR);
 	      break;
 
 	    case ACCEL:
 	      step_Counter(data);
-	      step_count++;
-	      srd.accel_count++;
+	      data->accel_count++;
+
 	      f_updateDelay(data);
 	      // Chech if we should start decelration.
-	      if(step_count >= srd.decel_start) {
-	        srd.accel_count = srd.decel_val;
-	        srd.run_state = DECEL;
+	      if(data->step_count >= data->decel_start) {
+	    	  data->accel_count = data->decel_val;
+	        data->state = DECEL;
 	      }
 	      // Chech if we hitted max speed.
-	      else if(new_step_delay <= srd.min_delay) {
-	        last_accel_delay = new_step_delay;
-	        new_step_delay = srd.min_delay;
-	        rest = 0;
-	        srd.run_state = RUN;
+	      else if(data->step_delay <= data->min_delay) {
+	        data->last_accel_delay = data->step_delay;
+	        data->step_delay = data->step_delay;
+	        data->rest = 0;
+	        data->state = RUN;
 	      }
 	      break;
 
 	    case RUN:
 	      step_Counter(data);
-	      new_step_delay = srd.min_delay;
+	      //new_step_delay = srd.min_delay;
 	      // Chech if we should start decelration.
-	      if(step_count >= srd.decel_start) {
-	        srd.accel_count = srd.decel_val;
+	      if(data->step_count >= data->decel_start) {
+	        data->accel_count = data->decel_val;
 	        // Start decelration with same delay as accel ended with.
-	        new_step_delay = last_accel_delay;
-	        srd.run_state = DECEL;
+	        data->step_delay= data->last_accel_delay;
+	        data->state = DECEL;
 	      }
 	      break;
 
 	    case DECEL:
 	      step_Counter(data);
-	      srd.accel_count++;
+	      data->accel_count++;
 	      f_updateDelay(data);
 	      // Check if we at last step
-	      if(srd.accel_count >= 0){
-	        srd.run_state = STOP;
+	      if(data->accel_count >= 0){
+	        data->state = STOP;
 	      }
 	      break;
 	  }
-	  srd.step_delay = new_step_delay;
+
 
 }
 
@@ -221,7 +231,6 @@ void f_updateDelay(speedRampData *data)
 	data->rest = new_rest;
 
 }
-
 
 
 //void MTR_ISR(void)
@@ -251,36 +260,36 @@ void f_updateDelay(speedRampData *data)
  *  \param x  Value to find square root of.
  *  \return  Square root of x.
  */
-static uint32_t sqrt(uint32_t x)
-{
-  register uint32_t xr;  // result register
-  register uint32_t q2;  // scan-bit register
-  register uint8_t  f;   // flag (one bit)
-
-  xr = 0;                     // clear result
-  q2 = 0x40000000L;           // higest possible result bit
-  do
-  {
-    if((xr + q2) <= x)
-    {
-      x -= xr + q2;
-      f = 1;                  // set flag
-    }
-    else{
-      f = 0;                  // clear flag
-    }
-    xr >>= 1;
-    if(f){
-      xr += q2;               // test flag
-    }
-  } while(q2 >>= 2);          // shift twice
-  if(xr < x){
-    return xr +1;             // add for rounding
-  }
-  else{
-    return xr;
-  }
-}
+//static uint32_t sqrt(uint32_t x)
+//{
+//  register uint32_t xr;  // result register
+//  register uint32_t q2;  // scan-bit register
+//  register uint8_t  f;   // flag (one bit)
+//
+//  xr = 0;                     // clear result
+//  q2 = 0x40000000L;           // higest possible result bit
+//  do
+//  {
+//    if((xr + q2) <= x)
+//    {
+//      x -= xr + q2;
+//      f = 1;                  // set flag
+//    }
+//    else{
+//      f = 0;                  // clear flag
+//    }
+//    xr >>= 1;
+//    if(f){
+//      xr += q2;               // test flag
+//    }
+//  } while(q2 >>= 2);          // shift twice
+//  if(xr < x){
+//    return xr +1;             // add for rounding
+//  }
+//  else{
+//    return xr;
+//  }
+//}
 
 /*! \brief Find minimum value.
  *
@@ -288,12 +297,12 @@ static uint32_t sqrt(uint32_t x)
  *
  *  \return  Min(x,y).
  */
-uint16_t min(uint16_t x, uint16_t y)
-{
-  if(x < y){
-    return x;
-  }
-  else{
-    return y;
-  }
-}
+//uint16_t min(uint16_t x, uint16_t y)
+//{
+//  if(x < y){
+//    return x;
+//  }
+//  else{
+//    return y;
+//  }
+//}

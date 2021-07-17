@@ -209,6 +209,20 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	HAL_UART_Receive_IT(&huart5, rec_buff, 1);
 }
 
+void TX_send_Int(uint16_t i)
+{
+	uint16_t c=500;
+	unsigned char ibuf[10]={0};
+	uint8_t len=0;
+	itoa(i,ibuf,10);
+	while (ibuf[len]){
+		len++;
+	}
+	HAL_UART_Transmit_IT(&huart5,ibuf, len);
+
+
+}
+
 /* USER CODE END 1 */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
