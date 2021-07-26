@@ -24,6 +24,7 @@ Queue Ser_Queue;
 void reset_Queue(Queue *Q);
 void enQueue(Queue *Q,uint8_t element);
 uint8_t deQueue(Queue *Q);
+uint8_t isQ_Empty(Queue *Q);
 
 
 #endif /* __QUEUE_H__ */

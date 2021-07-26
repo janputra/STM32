@@ -117,16 +117,11 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  uint8_t str[]="Hello world!!!!!";
-  uint8_t len = (sizeof(str)/sizeof(str[0]))-1;
-
-  Tx_data.len=len;
-  Tx_data.buff=str;
-
-
   Ser_Queue.Front=-1;
   Ser_Queue.Rear=-1;
-
+  uint8_t buffer[20];
+  uint8_t cmd[3];
+  int8_t buf_val[4];
   HAL_UART_Receive_IT(&huart5, rec_buff, 1);
  // uint16_t c=0;
   motor_param.accel=50;
@@ -152,9 +147,91 @@ int main(void)
 //	  HAL_Delay(1000);
 	  if (buff_is_ready())
 	  {
-		  printf("reply : ");
-		  HAL_UART_Transmit_IT(&huart5,Ser_Queue.Buffer, Ser_Queue.Rear+1);
-		  reset_Queue(&Ser_Queue);
+
+		  for (int i=0;i<3;i++){
+			  cmd[i]= deQueue(&Ser_Queue);
+		  }
+
+
+		  if ((cmd[0]=='S') &&(cmd[1]=='E') &&(cmd[2]=='T'))
+		  {
+			  uint8_t temp;
+			  uint8_t dum=0;
+			  int len = (Ser_Queue.Rear-Ser_Queue.Front)+1;
+			  while (!isQ_Empty(&Ser_Queue))
+			  {
+				  temp = deQueue(&Ser_Queue);
+
+				  switch (temp) {
+					case 'a':
+						printf("setting a\r\n");
+
+//						while ((temp!=' ')||(temp!='\n'))
+//						{
+//
+//							temp=deQueue(&Ser_Queue);
+//							buf_val[dum]=(int8_t)temp;
+//							dum++;
+//						}
+//						dum=0;
+//						motor_param.accel= (uint16_t)atoi(buf_val);
+//						//memset(buf_val,0,4);
+						break;
+					case 'd':
+
+					   break;
+					case 's':
+
+						break;
+
+					case 'c':
+
+						break;
+
+				}
+
+			  }
+
+
+			  printf("accel : %d decel : %d speed  : %d steps : %d\r\n",
+					  motor_param.accel,motor_param.decel,motor_param.speed,motor_param.steps);
+//		  int len = (Ser_Queue.Rear-Ser_Queue.Front)+1;
+//		  for (int j =0;j<len;j++)
+//		  	 {
+//		  		 buffer[j]=deQueue(&Ser_Queue);
+//
+//		  	 }
+//		  HAL_UART_Transmit_IT(&huart5,buffer, len);
+
+		  }
+		  else if ((cmd[0]=='R') &&(cmd[1]=='U') &&(cmd[2]=='N'))
+		  {
+			  runMotor_f=1;
+
+		  }
+
+		  //reset_Queue(&Ser_Queue);
+//		  if (deQueue(&Ser_Queue)=='S')
+//
+//		  {
+//			  HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
+//			  printf("reply : ");
+//			  int len = (Ser_Queue.Rear-Ser_Queue.Front)+1;
+//
+//			  for (int j =0;j<len;j++)
+//			  {
+//				  buffer[j]=deQueue(&Ser_Queue);
+//
+//			  }
+//			  //Ser_Queue.Front=Ser_Queue.Front+3;
+//
+//			  HAL_UART_Transmit_IT(&huart5,buffer, len);
+//			  memset(buffer,0,10);
+//		  }
+
+
+
+
 	  }
 	  if (runMotor_f)
 	  {
@@ -163,10 +240,7 @@ int main(void)
 
 		 // printf("s_delay : %d s_count : %d \n", motor_data.step_delay, motor_data.step_count);
 	  }
-	  //	  c= htim7.Instance->CNT;
-//	  itoa(c,ibuf,10);
-//	  ibuf[3]= '\n';
-//	  HAL_UART_Transmit_IT(&huart5, ibuf, 4);
+
 
 
 
