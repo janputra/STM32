@@ -117,7 +117,7 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  uint8_t str[]="Hello world!!!!!\n";
+  uint8_t str[]="Hello world!!!!!";
   uint8_t len = (sizeof(str)/sizeof(str[0]))-1;
 
   Tx_data.len=len;
@@ -129,10 +129,10 @@ int main(void)
 
   HAL_UART_Receive_IT(&huart5, rec_buff, 1);
  // uint16_t c=0;
-  motor_param.accel=100;
-  motor_param.decel=100;
-  motor_param.speed=10;
-  motor_param.steps=4096/4;
+  motor_param.accel=50;
+  motor_param.decel=50;
+  motor_param.speed=100;
+  motor_param.steps=4096;
 
 //  htim7.Instance->ARR= 2500;
 //  HAL_TIM_Base_Start(&htim7);
@@ -152,13 +152,14 @@ int main(void)
 //	  HAL_Delay(1000);
 	  if (buff_is_ready())
 	  {
-
+		  printf("reply : ");
 		  HAL_UART_Transmit_IT(&huart5,Ser_Queue.Buffer, Ser_Queue.Rear+1);
 		  reset_Queue(&Ser_Queue);
 	  }
 	  if (runMotor_f)
 	  {
 		  runStepper(&motor_data, &motor_param);
+		  runMotor_f=0;
 
 		 // printf("s_delay : %d s_count : %d \n", motor_data.step_delay, motor_data.step_count);
 	  }
@@ -261,6 +262,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   {
 
 	  updateStepper(&motor_data);
+	  printf("step delay : %d set count :%d state : %d\r\n", motor_data.step_delay, motor_data.step_count, motor_data.state);
 
   }
 

@@ -153,23 +153,25 @@ void updateStepper(speedRampData *data)
 	// Remember the last step delay used when accelrating.
 
 
-		printf("ok!\n");
+		//printf("ok!\n");
 	  //OCR1A = srd.step_delay;
 
-
+		if (data->last_step_delay!=data->step_delay){
 			TIM_MTR.Instance->ARR= data->step_delay-1;
 			data->last_step_delay=data->step_delay;
+		}
 
 
 
-
-	  switch(data->run_state) {
+	  switch(data->state) {
 	    case STOP:
 	      data->step_count=0;
 	      data->rest = 0;
-	      runMotor_f=0;
+	      data->step_delay =0;
 
 	      HAL_TIM_Base_Stop_IT(&TIM_MTR);
+	      printf("min delay : %d sec_start : %d dec_value : %d\r\n",
+	    		  data->min_delay,data->decel_start,data->decel_val);
 	      break;
 
 	    case ACCEL:
@@ -185,7 +187,7 @@ void updateStepper(speedRampData *data)
 	      // Chech if we hitted max speed.
 	      else if(data->step_delay <= data->min_delay) {
 	        data->last_accel_delay = data->step_delay;
-	        data->step_delay = data->step_delay;
+	        //data->step_delay = data->step_delay;
 	        data->rest = 0;
 	        data->state = RUN;
 	      }

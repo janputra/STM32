@@ -148,8 +148,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	//TX_send_Int(10);
 
 	HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
+	//printf("test!!\n");
 
 	runMotor_f=1;
+
 
 }
 /* USER CODE END 2 */
