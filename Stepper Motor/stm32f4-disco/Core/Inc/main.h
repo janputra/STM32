@@ -263,7 +263,7 @@ uint8_t rec_buff[1];
 uint8_t tr_buff[1];
 
 uint8_t runMotor_f;
-
+uint8_t temp_pos;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

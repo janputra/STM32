@@ -144,13 +144,16 @@ void MX_GPIO_Init(void)
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	//HAL_UART_Transmit_IT(&huart5, Tx_data.buff, Tx_data.len);
-
+	if(temp_pos == 8)
+	{
+		temp_pos=0;
+	}
 	//TX_send_Int(10);
 
 	HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
 	//printf("test!!\n");
-
-	runMotor_f=1;
+	mtr_Output(temp_pos);
+	temp_pos++;
 
 
 }

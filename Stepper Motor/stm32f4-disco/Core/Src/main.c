@@ -29,10 +29,11 @@
 #include "usb_otg.h"
 #include "gpio.h"
 #include "fmc.h"
-#include "retarget.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "queue.h"
+
 #include "stepper.h"
 
 /* USER CODE END Includes */
@@ -109,9 +110,8 @@ int main(void)
   MX_UART5_Init();
   MX_USB_OTG_HS_HCD_Init();
   MX_TIM7_Init();
-  RetargetInit(&huart5);
   /* USER CODE BEGIN 2 */
-
+  RetargetInit(&huart5);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -124,10 +124,10 @@ int main(void)
   int8_t buf_val[4];
   HAL_UART_Receive_IT(&huart5, rec_buff, 1);
  // uint16_t c=0;
-  motor_param.accel=50;
-  motor_param.decel=50;
+  motor_param.accel=10;
+  motor_param.decel=10;
   motor_param.speed=100;
-  motor_param.steps=4096;
+  motor_param.steps=-1000;
 
 //  htim7.Instance->ARR= 2500;
 //  HAL_TIM_Base_Start(&htim7);
@@ -147,6 +147,8 @@ int main(void)
 //	  HAL_Delay(1000);
 	  if (buff_is_ready())
 	  {
+		  uint8_t *ptr;
+		  uint8_t *space;
 
 		  for (int i=0;i<3;i++){
 			  cmd[i]= deQueue(&Ser_Queue);
@@ -156,35 +158,69 @@ int main(void)
 		  if ((cmd[0]=='S') &&(cmd[1]=='E') &&(cmd[2]=='T'))
 		  {
 			  uint8_t temp;
-			  uint8_t dum=0;
-			  int len = (Ser_Queue.Rear-Ser_Queue.Front)+1;
+			  //uint8_t dum=0;
+			  //int len = (Ser_Queue.Rear-Ser_Queue.Front)+1;
 			  while (!isQ_Empty(&Ser_Queue))
 			  {
 				  temp = deQueue(&Ser_Queue);
 
 				  switch (temp) {
 					case 'a':
-						printf("setting a\r\n");
 
-//						while ((temp!=' ')||(temp!='\n'))
-//						{
+						ptr =&Ser_Queue.Buffer[Ser_Queue.Front];
+						space = strchr(ptr,' ');
+						if (*space==NULL){
+							space = strchr(ptr,'\n');
+						}
+						*space=0;
+						motor_param.accel= atoi(ptr);
+
+						Ser_Queue.Front= Ser_Queue.Front+(space-ptr);
+						//printf("setting a : %d\r\n", motor_param.accel);
+
 //
-//							temp=deQueue(&Ser_Queue);
-//							buf_val[dum]=(int8_t)temp;
-//							dum++;
-//						}
-//						dum=0;
-//						motor_param.accel= (uint16_t)atoi(buf_val);
-//						//memset(buf_val,0,4);
 						break;
 					case 'd':
+						ptr =&Ser_Queue.Buffer[Ser_Queue.Front];
+						space = strchr(ptr,' ');
+						if (*space==NULL){
+							space = strchr(ptr,'\n');
+						}
+						*space=0;
+						motor_param.decel= atoi(ptr);
+
+						Ser_Queue.Front= Ser_Queue.Front+(space-ptr);
+
+						//printf("setting d\r\n");
 
 					   break;
 					case 's':
+						ptr =&Ser_Queue.Buffer[Ser_Queue.Front];
+						space = strchr(ptr,' ');
+						if (*space==NULL){
+							space = strchr(ptr,'\n');
+						}
+						*space=0;
+						motor_param.speed= atoi(ptr);
+
+						Ser_Queue.Front= Ser_Queue.Front+(space-ptr);
+
+						//printf("setting s\r\n");
 
 						break;
 
 					case 'c':
+						ptr =&Ser_Queue.Buffer[Ser_Queue.Front];
+						space = strchr(ptr,' ');
+						if (*space==NULL){
+							space = strchr(ptr,'\n');
+						}
+						*space=0;
+						motor_param.steps= atoi(ptr);
+
+						Ser_Queue.Front= Ser_Queue.Front+(space-ptr);
+
+						//printf("setting c\r\n");
 
 						break;
 
@@ -193,7 +229,7 @@ int main(void)
 			  }
 
 
-			  printf("accel : %d decel : %d speed  : %d steps : %d\r\n",
+			  printf("Setting accel : %d decel : %d speed  : %d steps : %d\r\n",
 					  motor_param.accel,motor_param.decel,motor_param.speed,motor_param.steps);
 //		  int len = (Ser_Queue.Rear-Ser_Queue.Front)+1;
 //		  for (int j =0;j<len;j++)
@@ -237,7 +273,8 @@ int main(void)
 	  {
 		  runStepper(&motor_data, &motor_param);
 		  runMotor_f=0;
-
+		  printf("min delay : %d sec_start : %d dec_value : %d\r\n",
+		  	    		  motor_data.min_delay,motor_data.decel_start,motor_data.decel_val);
 		 // printf("s_delay : %d s_count : %d \n", motor_data.step_delay, motor_data.step_count);
 	  }
 
@@ -256,7 +293,6 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-  RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
 
   /** Configure the main internal regulator output voltage
   */
@@ -290,14 +326,6 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_LTDC;
-  PeriphClkInitStruct.PLLSAI.PLLSAIN = 50;
-  PeriphClkInitStruct.PLLSAI.PLLSAIR = 2;
-  PeriphClkInitStruct.PLLSAIDivR = RCC_PLLSAIDIVR_2;
-  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
 }
 
 /* USER CODE BEGIN 4 */
@@ -315,7 +343,7 @@ uint8_t buff_is_ready(void)
 
 /* USER CODE END 4 */
 
- /**
+/**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM6 interrupt took place, inside
   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
@@ -336,7 +364,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   {
 
 	  updateStepper(&motor_data);
-	  printf("step delay : %d set count :%d state : %d\r\n", motor_data.step_delay, motor_data.step_count, motor_data.state);
+	 // printf("step delay : %d set count :%d state : %d\r\n", motor_data.step_delay, motor_data.step_count, motor_data.state);
 
   }
 

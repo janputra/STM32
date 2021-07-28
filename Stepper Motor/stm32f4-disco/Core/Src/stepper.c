@@ -22,21 +22,29 @@ static uint8_t MTR_OUT_TAB[8] = { 0b1000,
 
 void step_Counter(speedRampData *data)
 {
+	data->step_count++;
+
 
 	if (data->dir==CW)
 	{
 		data->step_pos++;
-		data->step_count++;
+
+
+		if (data->step_pos==8){
+				data->step_pos=0;
+			}
 	}
 	else if (data->dir==CCW)
 	{
 		data->step_pos--;
-		data->step_count--;
+
+
+		if (data->step_pos==-1){
+				data->step_pos=8;
+			}
 	}
 
-	if (data->step_pos==8){
-		data->step_pos=0;
-	}
+
 
 	mtr_Output(data->step_pos);
 }
@@ -61,15 +69,15 @@ void runStepper(speedRampData *data, SM_Param *param)
 	  uint16_t speed = param->speed;
 	  uint16_t accel = param->accel;
 	  uint16_t decel = param->decel;
-	  uint16_t step = param->steps;
+	  int16_t step = param->steps;
 	  // Set direction from sign on step value.
 	  if(step < 0){
 	    data->dir=CCW;
-		data->step_total = -step;
+		step = -step;
 	  }
 	  else{
 		data->dir=CW;
-		data->step_total= step;
+
 	  }
 
 	  // If moving only 1 step.
@@ -170,8 +178,7 @@ void updateStepper(speedRampData *data)
 	      data->step_delay =0;
 
 	      HAL_TIM_Base_Stop_IT(&TIM_MTR);
-	      printf("min delay : %d sec_start : %d dec_value : %d\r\n",
-	    		  data->min_delay,data->decel_start,data->decel_val);
+
 	      break;
 
 	    case ACCEL:
@@ -235,21 +242,7 @@ void f_updateDelay(speedRampData *data)
 }
 
 
-//void MTR_ISR(void)
-//{
-//
-//
-//	     if (TIM_MTR.Instance->SR==TIM_SR_UIF)
-//		  {
-//	    	 TIM_MTR.Instance->SR&=~TIM_SR_UIF;
-//
-//
-//	    	 itoa(c,ibuf,10);
-//	    	 ibuf[3]= '\n';
-//	    	 HAL_UART_Transmit_IT(&huart5, ibuf, 4);
-//	    	 c++;
-//		  }
-//
+
 //}
 
 /*! \brief Square root routine.

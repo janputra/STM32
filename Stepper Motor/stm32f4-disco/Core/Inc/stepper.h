@@ -19,7 +19,7 @@ typedef struct SM_Param
 	uint16_t speed;
 	uint16_t accel;
 	uint16_t decel;
-	uint16_t steps;
+	int16_t steps;
 
 }SM_Param;
 
@@ -46,7 +46,7 @@ typedef struct speedRampData{
   int16_t accel_count;
   int16_t step_count;
   int16_t step_total;
-  uint8_t step_pos;
+  int8_t step_pos;
   uint8_t state;
 
   uint16_t last_accel_delay;
@@ -94,5 +94,6 @@ void f_updateDelay(speedRampData *data);
 uint16_t min(uint16_t x, uint16_t y);
 void updateStepper(speedRampData *data);
 void runStepper(speedRampData *data, SM_Param *param);
+void mtr_Output(uint8_t pos);
 
 #endif /* INC_STEPPER_H_ */
